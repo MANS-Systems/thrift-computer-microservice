@@ -12,11 +12,6 @@ import org.springframework.context.annotation.Bean;
 @EnableDiscoveryClient
 public class PartsServiceApplication {
 
-	@Bean
-	public Database getDB() {
-		return new Database();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(PartsServiceApplication.class, args);
 	}
