@@ -1,8 +1,7 @@
 package com.nimatullo.transactionservice.kafka;
 
 import com.nimatullo.transactionservice.dto.PaymentResponse;
-import com.nimatullo.transactionservice.dto.TransactionCreated;
-import com.nimatullo.transactionservice.models.GraphicsCard;
+import com.nimatullo.transactionservice.dto.TransactionCreatedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -48,7 +47,7 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, TransactionCreated> kafkaTemplate() {
+    public KafkaTemplate<String, TransactionCreatedEvent> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

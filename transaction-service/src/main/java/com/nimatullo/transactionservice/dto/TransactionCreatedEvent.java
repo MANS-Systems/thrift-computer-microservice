@@ -1,21 +1,29 @@
 package com.nimatullo.transactionservice.dto;
 
+import com.nimatullo.transactionservice.models.Transaction;
 import com.nimatullo.transactionservice.models.TransactionStatus;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class TransactionCreated {
+public class TransactionCreatedEvent {
     private UUID transactionId;
     private TransactionStatus status;
     private LocalDate timeOfTransaction;
     private String creditCardNumber;
     private double transactionTotal;
 
-    public TransactionCreated() {
+    public TransactionCreatedEvent() {
     }
 
-    public TransactionCreated(UUID transactionId, TransactionStatus status, String creditCardNumber, double transactionTotal) {
+    public TransactionCreatedEvent(Transaction transaction) {
+        this.transactionId = transaction.getTransactionId();
+        this.status = TransactionStatus.TRANSACTION_PENDING;
+        this.creditCardNumber = transaction.getCreditCardNumber();
+        this.transactionTotal = transaction.getItemBought().getPrice();
+    }
+
+    public TransactionCreatedEvent(UUID transactionId, TransactionStatus status, String creditCardNumber, double transactionTotal) {
         this.transactionId = transactionId;
         this.status = status;
         this.timeOfTransaction = LocalDate.now();
