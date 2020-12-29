@@ -1,4 +1,4 @@
-package com.nimatullo.transactionservice.models;
+package com.nimatullo.paymentservice.model;
 
 public enum TransactionStatus {
     TRANSACTION_SUCCESSFUL,

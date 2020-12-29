@@ -9,11 +9,18 @@ public class TransactionCreated {
     private UUID transactionId;
     private TransactionStatus status;
     private LocalDate timeOfTransaction;
+    private String creditCardNumber;
+    private double transactionTotal;
 
-    public TransactionCreated(UUID transactionId, TransactionStatus status) {
+    public TransactionCreated() {
+    }
+
+    public TransactionCreated(UUID transactionId, TransactionStatus status, String creditCardNumber, double transactionTotal) {
         this.transactionId = transactionId;
         this.status = status;
         this.timeOfTransaction = LocalDate.now();
+        this.creditCardNumber = creditCardNumber;
+        this.transactionTotal = transactionTotal;
     }
 
     public UUID getTransactionId() {
@@ -34,6 +41,22 @@ public class TransactionCreated {
 
     public LocalDate getTimeOfTransaction() {
         return timeOfTransaction;
+    }
+
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
+
+    public void setCreditCardNumber(String creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
+    }
+
+    public double getTransactionTotal() {
+        return transactionTotal;
+    }
+
+    public void setTransactionTotal(double transactionTotal) {
+        this.transactionTotal = transactionTotal;
     }
 
     public void setTimeOfTransaction(LocalDate timeOfTransaction) {

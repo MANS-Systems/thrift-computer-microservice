@@ -1,18 +1,23 @@
-package com.nimatullo.transactionservice.models;
+package com.nimatullo.paymentservice.dto;
+
+import com.nimatullo.paymentservice.model.TransactionStatus;
 
 import java.util.UUID;
 
-public class Transaction {
+public class TransactionResponse {
     private UUID transactionId;
     private TransactionStatus status;
-    private GraphicsCard itemBought;
     private String creditCardNumber;
+    private double transactionTotal;
 
-    public Transaction(UUID transactionId, TransactionStatus status, GraphicsCard itemBought, String creditCardNumber) {
+    public TransactionResponse() {
+    }
+
+    public TransactionResponse(UUID transactionId, TransactionStatus status, String creditCardNumber, double transactionTotal) {
         this.transactionId = transactionId;
         this.status = status;
-        this.itemBought = itemBought;
         this.creditCardNumber = creditCardNumber;
+        this.transactionTotal = transactionTotal;
     }
 
     public String getCreditCardNumber() {
@@ -21,6 +26,14 @@ public class Transaction {
 
     public void setCreditCardNumber(String creditCardNumber) {
         this.creditCardNumber = creditCardNumber;
+    }
+
+    public double getTransactionTotal() {
+        return transactionTotal;
+    }
+
+    public void setTransactionTotal(double transactionTotal) {
+        this.transactionTotal = transactionTotal;
     }
 
     public UUID getTransactionId() {
@@ -37,13 +50,5 @@ public class Transaction {
 
     public void setStatus(TransactionStatus status) {
         this.status = status;
-    }
-
-    public GraphicsCard getItemBought() {
-        return itemBought;
-    }
-
-    public void setItemBought(GraphicsCard itemBought) {
-        this.itemBought = itemBought;
     }
 }

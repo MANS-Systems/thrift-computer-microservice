@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +36,7 @@ public class TransactionController {
         final String PARTS_SERVICE_URL = partsService.getUri().toString();
         GraphicsCard itemBought= restTemplate.getForObject(PARTS_SERVICE_URL + "/parts/" + partId, GraphicsCard.class);
         UUID transactionId = UUID.randomUUID();
-        kafkaTemplate.send(TOPIC, new TransactionCreated(transactionId, TransactionStatus.TRANSACTION_SUCCESSFUL));
-        return new Transaction(transactionId, TransactionStatus.TRANSACTION_SUCCESSFUL, itemBought);
+        kafkaTemplate.send(TOPIC, new TransactionCreated(transactionId, TransactionStatus.TRANSACTION_PENDING, "4843853622714538", itemBought.getPrice()));
+        return new Transaction(transactionId, TransactionStatus.TRANSACTION_PENDING, itemBought, "4843853622714538");
     }
 }
