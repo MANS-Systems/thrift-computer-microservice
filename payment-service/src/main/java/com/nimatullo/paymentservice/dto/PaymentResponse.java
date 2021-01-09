@@ -4,13 +4,22 @@ import com.nimatullo.paymentservice.model.PaymentStatus;
 
 import java.util.UUID;
 
-public class PaymentResponse {
-    private PaymentStatus status;
-    private UUID orderId;
 
-    public PaymentResponse(PaymentStatus status, UUID orderId) {
+public class PaymentResponse {
+    private UUID transactionId;
+    private PaymentStatus status;
+
+    public PaymentResponse(UUID transactionId, PaymentStatus status) {
         this.status = status;
-        this.orderId = orderId;
+        this.transactionId = transactionId;
+    }
+
+    public UUID getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(UUID transactionId) {
+        this.transactionId = transactionId;
     }
 
     public PaymentStatus getStatus() {
@@ -19,13 +28,5 @@ public class PaymentResponse {
 
     public void setStatus(PaymentStatus status) {
         this.status = status;
-    }
-
-    public UUID getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(UUID orderId) {
-        this.orderId = orderId;
     }
 }

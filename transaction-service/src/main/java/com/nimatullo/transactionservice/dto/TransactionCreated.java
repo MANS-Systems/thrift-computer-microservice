@@ -6,29 +6,19 @@ import com.nimatullo.transactionservice.models.TransactionStatus;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class TransactionCreatedEvent {
+public class TransactionCreated {
     private UUID transactionId;
     private TransactionStatus status;
     private LocalDate timeOfTransaction;
     private String creditCardNumber;
     private double transactionTotal;
 
-    public TransactionCreatedEvent() {
-    }
-
-    public TransactionCreatedEvent(Transaction transaction) {
+    public TransactionCreated(Transaction transaction) {
         this.transactionId = transaction.getTransactionId();
-        this.status = TransactionStatus.TRANSACTION_PENDING;
+        this.status = TransactionStatus.PENDING;
         this.creditCardNumber = transaction.getCreditCardNumber();
         this.transactionTotal = transaction.getItemBought().getPrice();
-    }
-
-    public TransactionCreatedEvent(UUID transactionId, TransactionStatus status, String creditCardNumber, double transactionTotal) {
-        this.transactionId = transactionId;
-        this.status = status;
         this.timeOfTransaction = LocalDate.now();
-        this.creditCardNumber = creditCardNumber;
-        this.transactionTotal = transactionTotal;
     }
 
     public UUID getTransactionId() {
