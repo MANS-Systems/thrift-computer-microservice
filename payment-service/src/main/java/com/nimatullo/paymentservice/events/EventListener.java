@@ -8,10 +8,10 @@ import com.nimatullo.paymentservice.model.Message;
 import com.nimatullo.paymentservice.model.PaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeTypeUtils;
 
@@ -19,9 +19,11 @@ import java.util.UUID;
 
 @Component
 public class EventListener {
+
     private PaymentProvider bank;
 
-    private final EventStream eventStream;
+    @Autowired
+    private EventStream eventStream;
 
     public EventListener(PaymentProvider bank, EventStream eventStream) {
         this.bank = bank;
@@ -30,6 +32,7 @@ public class EventListener {
 
     @StreamListener(EventStream.INBOUND)
     public void handleEvent(@Payload Message<TransactionRequest> message) {
+        System.out.println(message.getMessageId().toString());
         MessageChannel messageChannel = eventStream.producer();
         try {
             bank.chargeCard(message.getPayload().getTransactionTotal());

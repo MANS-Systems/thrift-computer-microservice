@@ -6,8 +6,8 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
 public interface EventStream {
-    String INBOUND = "payment-response-bus";
-    String OUTBOUND = "payment-request-bus";
+    String INBOUND = "payment-response";
+    String OUTBOUND = "payment-request";
 
     @Input(INBOUND)
     SubscribableChannel consumer();

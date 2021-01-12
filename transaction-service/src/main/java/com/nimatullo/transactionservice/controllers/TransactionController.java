@@ -8,6 +8,8 @@ import com.nimatullo.transactionservice.models.GraphicsCard;
 import com.nimatullo.transactionservice.models.Message;
 import com.nimatullo.transactionservice.models.Transaction;
 import com.nimatullo.transactionservice.models.TransactionStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -27,6 +29,8 @@ import java.util.UUID;
 @RestController
 public class TransactionController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+
     @Autowired
     RestTemplate restTemplate;
 
@@ -39,11 +43,8 @@ public class TransactionController {
     @Autowired
     private TransactionDatabase transactionDatabase;
 
-    private final EventStream eventStream;
-
-    public TransactionController(EventStream eventStream) {
-        this.eventStream = eventStream;
-    }
+    @Autowired
+    private EventStream eventStream;
 
 
     @RequestMapping(value = "/{partId}")
@@ -73,10 +74,13 @@ public class TransactionController {
 
     private void sendMessage(UUID transactionId, Message<TransactionCreated> message) {
         transactionEventDatabase.add(transactionId, message.getPayload());
-        MessageChannel messageChannel = eventStream.producer();
-        messageChannel.send(MessageBuilder
-                .withPayload(message)
-                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
-                .build());
+
+        MessageChannel producer = eventStream.producer();
+        producer.send(MessageBuilder.withPayload(message)
+                        .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
+                        .build());
+        logger.info("Message sent with ID: " + message.getMessageId());
+
+
     }
 }

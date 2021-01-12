@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: transaction-service
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        payment-response:
+          destination: payment-response
+          contentType: application/json
+        payment-request:
+          destination: payment-request
+          contentType: application/json
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8882/eureka
+
+server:
+  port: 8881
