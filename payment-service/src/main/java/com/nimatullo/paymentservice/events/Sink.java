@@ -5,7 +5,7 @@ import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
-public interface EventStream {
+public interface Sink {
     String INBOUND = "payment-request";
     String OUTBOUND = "payment-response";
 

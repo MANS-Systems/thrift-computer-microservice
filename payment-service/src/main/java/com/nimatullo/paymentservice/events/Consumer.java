@@ -1,8 +1,8 @@
 package com.nimatullo.paymentservice.events;
 
 import com.nimatullo.paymentservice.bank.PaymentProvider;
-import com.nimatullo.paymentservice.dto.PaymentResponse;
-import com.nimatullo.paymentservice.dto.TransactionRequest;
+import com.nimatullo.paymentservice.dto.PaymentAuthorizationResponse;
+import com.nimatullo.paymentservice.dto.PaymentAuthorizationRequest;
 import com.nimatullo.paymentservice.errors.InsufficientFundsException;
 import com.nimatullo.paymentservice.model.Message;
 import com.nimatullo.paymentservice.model.PaymentStatus;
@@ -23,27 +23,27 @@ public class Consumer {
     private PaymentProvider bank;
 
     @Autowired
-    private EventStream eventStream;
+    private Sink sink;
 
-    public Consumer(PaymentProvider bank, EventStream eventStream) {
+    public Consumer(PaymentProvider bank, Sink sink) {
         this.bank = bank;
-        this.eventStream = eventStream;
+        this.sink = sink;
     }
 
-    @StreamListener(EventStream.INBOUND)
-    public void handleEvent(@Payload Message<TransactionRequest> message) {
+    @StreamListener(Sink.INBOUND)
+    public void handleEvent(@Payload Message<PaymentAuthorizationRequest> message) {
         System.out.println(message.getMessageId().toString());
-        MessageChannel messageChannel = eventStream.producer();
+        MessageChannel messageChannel = sink.producer();
         try {
             bank.chargeCard(message.getPayload().getTransactionTotal());
-            Message<PaymentResponse> response = new Message<>(UUID.randomUUID(), new PaymentResponse(message.getPayload().getTransactionId(), PaymentStatus.CARD_APPROVED));
+            Message<PaymentAuthorizationResponse> response = new Message<>(UUID.randomUUID(), new PaymentAuthorizationResponse(message.getPayload().getTransactionId(), PaymentStatus.CARD_APPROVED));
             messageChannel.send(MessageBuilder
                     .withPayload(response)
                     .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
                     .build());
         }
         catch (InsufficientFundsException e) {
-            Message<PaymentResponse> response = new Message<>(UUID.randomUUID(), new PaymentResponse(message.getPayload().getTransactionId(), PaymentStatus.CARD_DECLINED));
+            Message<PaymentAuthorizationResponse> response = new Message<>(UUID.randomUUID(), new PaymentAuthorizationResponse(message.getPayload().getTransactionId(), PaymentStatus.CARD_DECLINED));
             messageChannel.send(MessageBuilder
                     .withPayload(response)
                     .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)

@@ -5,11 +5,11 @@ import com.nimatullo.paymentservice.model.PaymentStatus;
 import java.util.UUID;
 
 
-public class PaymentResponse {
+public class PaymentAuthorizationResponse {
     private UUID transactionId;
     private PaymentStatus status;
 
-    public PaymentResponse(UUID transactionId, PaymentStatus status) {
+    public PaymentAuthorizationResponse(UUID transactionId, PaymentStatus status) {
         this.status = status;
         this.transactionId = transactionId;
     }

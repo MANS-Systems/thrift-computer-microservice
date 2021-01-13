@@ -2,7 +2,7 @@ package com.nimatullo.transactionservice.controllers;
 
 import com.nimatullo.transactionservice.db.TransactionDatabase;
 import com.nimatullo.transactionservice.db.TransactionCreatedMessageDB;
-import com.nimatullo.transactionservice.dto.TransactionCreated;
+import com.nimatullo.transactionservice.dto.PaymentAuthorizationRequest;
 import com.nimatullo.transactionservice.messaging.Producer;
 import com.nimatullo.transactionservice.models.GraphicsCard;
 import com.nimatullo.transactionservice.models.Message;
@@ -46,7 +46,7 @@ public class TransactionController {
     @RequestMapping(value = "/{partId}")
     public Transaction getTransaction(@PathVariable int partId) {
         Transaction transaction = new Transaction(UUID.randomUUID(), TransactionStatus.PENDING, getPart(partId), "4843853622714538");
-        Message<TransactionCreated> transactionCreatedMessage = new Message<>(UUID.randomUUID(), new TransactionCreated(transaction));
+        Message<PaymentAuthorizationRequest> transactionCreatedMessage = new Message<>(UUID.randomUUID(), new PaymentAuthorizationRequest(transaction));
         save(transaction, transactionCreatedMessage);
         producer.sendMessage(transactionCreatedMessage);
         return transaction;
@@ -68,7 +68,7 @@ public class TransactionController {
         return partsService.getUri().toString();
     }
 
-    private void save(Transaction transaction, Message<TransactionCreated> message) {
+    private void save(Transaction transaction, Message<PaymentAuthorizationRequest> message) {
         transactionDatabase.add(transaction.getTransactionId(), transaction);
         transactionCreatedMessageDB.add(message);
     }

@@ -4,16 +4,16 @@ import com.nimatullo.paymentservice.model.TransactionStatus;
 
 import java.util.UUID;
 
-public class TransactionRequest {
+public class PaymentAuthorizationRequest {
     private UUID transactionId;
     private TransactionStatus status;
     private String creditCardNumber;
     private double transactionTotal;
 
-    public TransactionRequest() {
+    public PaymentAuthorizationRequest() {
     }
 
-    public TransactionRequest(UUID transactionId, TransactionStatus status, String creditCardNumber, double transactionTotal) {
+    public PaymentAuthorizationRequest(UUID transactionId, TransactionStatus status, String creditCardNumber, double transactionTotal) {
         this.transactionId = transactionId;
         this.status = status;
         this.creditCardNumber = creditCardNumber;

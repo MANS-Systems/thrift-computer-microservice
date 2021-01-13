@@ -6,14 +6,14 @@ import com.nimatullo.transactionservice.models.TransactionStatus;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class TransactionCreated {
+public class PaymentAuthorizationRequest {
     private UUID transactionId;
     private TransactionStatus status;
     private LocalDate timeOfTransaction;
     private String creditCardNumber;
     private double transactionTotal;
 
-    public TransactionCreated(Transaction transaction) {
+    public PaymentAuthorizationRequest(Transaction transaction) {
         this.transactionId = transaction.getTransactionId();
         this.status = TransactionStatus.PENDING;
         this.creditCardNumber = transaction.getCreditCardNumber();
