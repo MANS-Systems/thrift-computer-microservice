@@ -23,17 +23,17 @@ public class Consumer {
     private PaymentProvider bank;
 
     @Autowired
-    private Sink sink;
+    private Processor processor;
 
-    public Consumer(PaymentProvider bank, Sink sink) {
+    public Consumer(PaymentProvider bank, Processor processor) {
         this.bank = bank;
-        this.sink = sink;
+        this.processor = processor;
     }
 
-    @StreamListener(Sink.INBOUND)
+    @StreamListener(Processor.INBOUND)
     public void handleEvent(@Payload Message<PaymentAuthorizationRequest> message) {
         System.out.println(message.getMessageId().toString());
-        MessageChannel messageChannel = sink.producer();
+        MessageChannel messageChannel = processor.producer();
         try {
             bank.chargeCard(message.getPayload().getTransactionTotal());
             Message<PaymentAuthorizationResponse> response = new Message<>(UUID.randomUUID(), new PaymentAuthorizationResponse(message.getPayload().getTransactionId(), PaymentStatus.CARD_APPROVED));

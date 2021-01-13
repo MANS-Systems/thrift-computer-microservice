@@ -11,7 +11,7 @@ import org.springframework.util.MimeTypeUtils;
 @Component
 public class Producer {
     @Autowired
-    private Sink stream;
+    private Processor stream;
 
     public void sendMessage(Message message) {
         MessageChannel producer = stream.producer();

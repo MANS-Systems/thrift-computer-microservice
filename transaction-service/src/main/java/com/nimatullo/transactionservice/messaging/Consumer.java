@@ -21,7 +21,7 @@ public class Consumer {
     @Autowired
     private TransactionCreatedMessageDB transactionCreatedMessageDB;
 
-    @StreamListener(Sink.INBOUND)
+    @StreamListener(Processor.INBOUND)
     public void handleEvent(@Payload Message<PaymentAuthorizationResponse> message) {
         PaymentAuthorizationResponse payload = message.getPayload();
         Transaction transaction = transactionDatabase.get(payload.getTransactionId());
