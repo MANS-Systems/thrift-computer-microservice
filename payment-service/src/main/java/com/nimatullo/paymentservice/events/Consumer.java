@@ -18,14 +18,14 @@ import org.springframework.util.MimeTypeUtils;
 import java.util.UUID;
 
 @Component
-public class EventListener {
+public class Consumer {
 
     private PaymentProvider bank;
 
     @Autowired
     private EventStream eventStream;
 
-    public EventListener(PaymentProvider bank, EventStream eventStream) {
+    public Consumer(PaymentProvider bank, EventStream eventStream) {
         this.bank = bank;
         this.eventStream = eventStream;
     }

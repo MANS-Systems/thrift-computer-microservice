@@ -1,9 +1,9 @@
 package com.nimatullo.transactionservice.controllers;
 
 import com.nimatullo.transactionservice.db.TransactionDatabase;
-import com.nimatullo.transactionservice.db.TransactionEventDatabase;
+import com.nimatullo.transactionservice.db.TransactionCreatedMessageDB;
 import com.nimatullo.transactionservice.dto.TransactionCreated;
-import com.nimatullo.transactionservice.events.EventStream;
+import com.nimatullo.transactionservice.messaging.Producer;
 import com.nimatullo.transactionservice.models.GraphicsCard;
 import com.nimatullo.transactionservice.models.Message;
 import com.nimatullo.transactionservice.models.Transaction;
@@ -13,10 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,21 +34,21 @@ public class TransactionController {
     private DiscoveryClient discoveryClient;
 
     @Autowired
-    private TransactionEventDatabase transactionEventDatabase;
+    private TransactionCreatedMessageDB transactionCreatedMessageDB;
 
     @Autowired
     private TransactionDatabase transactionDatabase;
 
     @Autowired
-    private EventStream eventStream;
+    private Producer producer;
 
 
     @RequestMapping(value = "/{partId}")
     public Transaction getTransaction(@PathVariable int partId) {
         Transaction transaction = new Transaction(UUID.randomUUID(), TransactionStatus.PENDING, getPart(partId), "4843853622714538");
-        transactionDatabase.add(transaction.getTransactionId(), transaction);
         Message<TransactionCreated> transactionCreatedMessage = new Message<>(UUID.randomUUID(), new TransactionCreated(transaction));
-        sendMessage(transaction.getTransactionId(), transactionCreatedMessage);
+        save(transaction, transactionCreatedMessage);
+        producer.sendMessage(transactionCreatedMessage);
         return transaction;
     }
 
@@ -72,15 +68,8 @@ public class TransactionController {
         return partsService.getUri().toString();
     }
 
-    private void sendMessage(UUID transactionId, Message<TransactionCreated> message) {
-        transactionEventDatabase.add(transactionId, message.getPayload());
-
-        MessageChannel producer = eventStream.producer();
-        producer.send(MessageBuilder.withPayload(message)
-                        .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
-                        .build());
-        logger.info("Message sent with ID: " + message.getMessageId());
-
-
+    private void save(Transaction transaction, Message<TransactionCreated> message) {
+        transactionDatabase.add(transaction.getTransactionId(), transaction);
+        transactionCreatedMessageDB.add(message);
     }
 }

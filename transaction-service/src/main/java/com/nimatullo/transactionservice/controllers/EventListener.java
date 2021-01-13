@@ -1,21 +1,5 @@
 package com.nimatullo.transactionservice.controllers;
 
-import com.nimatullo.transactionservice.db.TransactionDatabase;
-import com.nimatullo.transactionservice.db.TransactionEventDatabase;
-import com.nimatullo.transactionservice.dto.PaymentResponse;
-import com.nimatullo.transactionservice.events.EventStream;
-import com.nimatullo.transactionservice.models.Message;
-import com.nimatullo.transactionservice.models.PaymentStatus;
-import com.nimatullo.transactionservice.models.TransactionStatus;
-import jdk.jfr.Event;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Component;
-
-import java.util.UUID;
-
 //@Component
 public class EventListener {
 //    private TransactionEventDatabase db;
