@@ -7,16 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 @RestController
 public class PartsServiceController {
 
     private final Database db = new Database();
-
-    @RequestMapping("/")
-    public String homePage() {
-        return "Hello world";
-    }
 
     @RequestMapping("/{productId}")
     @HystrixCommand(fallbackMethod = "getGraphicsCardDefault")
@@ -27,6 +23,11 @@ public class PartsServiceController {
         else {
             return db.get(productId);
         }
+    }
+
+    @RequestMapping("/parts/all")
+    public Flux<GraphicsCard> getAllGraphicsCards() {
+        return Flux.fromIterable(db.getAll());
     }
 
     public GraphicsCard getGraphicsCardDefault(int productId) {
